@@ -1,15 +1,29 @@
 #include "SharedMemory.h"
-
+#include <fstream>
 
 namespace Exchange::Ipc {
 
     Consumer::Consumer(const std::string& name, uint32_t capacity)
         : SharedMemory(name, capacity, false), mLock(name, false) {
-            
+        
+
         // Verify Magic
         if (std::strncmp(mHeader->signature, MAGIC, 32) != 0) {
             ENG_THROW("Invalid IPC Header Signature");
         }
+
+        const std::string uuidPath = "/tmp/"+mName+".uuid";
+        std::ifstream f(uuidPath);
+        if (!f.is_open()) {
+            ENG_THROW("UUID file not found");
+        }
+        char expectedUuid[37] = {};
+        f.getline(expectedUuid, sizeof(expectedUuid));
+        
+        if (std::strncmp(mHeader->uuid, expectedUuid, 36) != 0) {
+            ENG_THROW("Stale shared memory session");
+        }
+
         std::cout << "[Consumer] Attached. Session: " << mHeader->uuid << "\n";
     }
 

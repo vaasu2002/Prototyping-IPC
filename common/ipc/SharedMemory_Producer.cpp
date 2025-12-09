@@ -1,5 +1,5 @@
 #include "SharedMemory.h"
-
+#include <fstream>
 
 namespace Exchange::Ipc {
 
@@ -10,6 +10,12 @@ namespace Exchange::Ipc {
 
         // Generate and set UUID
         std::string sessionUuid = generateUuid();
+
+        const std::string uuidPath = "/tmp/"+mName+".uuid";
+        std::ofstream f(uuidPath, std::ios::trunc);
+        f << sessionUuid;
+        f.close();
+
         std::strncpy(mHeader->uuid, sessionUuid.c_str(), 37);
         mHeader->capacity = capacity;
         mHeader->maxMsgSize  = MAX_MSG_SIZE;
@@ -20,9 +26,6 @@ namespace Exchange::Ipc {
 
     bool Producer::write(const void* data, uint32_t size) {
         if (size > mHeader->maxMsgSize) {
-            std::cout<< size <<std::endl;
-            std::cout<< mHeader->maxMsgSize <<std::endl;
-            std::cout<< "here" <<std::endl;
             // Prevent buffer overflow
             return false;
         }

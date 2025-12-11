@@ -24,7 +24,7 @@ namespace Exchange::Ipc {
             ENG_THROW("Stale shared memory session");
         }
 
-        std::cout << "[Consumer] Attached. Session: " << mHeader->uuid << "\n";
+        LOG_INFO("Attached. Session: %s",mHeader->uuid);
     }
 
     uint32_t Consumer::read(void* buffer, uint32_t bufferSize) {

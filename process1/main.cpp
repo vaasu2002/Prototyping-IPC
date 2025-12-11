@@ -6,6 +6,7 @@
 #include "enum.h"
 #include "exception.h"
 #include "ipc/SharedMemory.h"
+#include "Logger/Logger.h"
 
 // Producer
 int main(int argc, char* argv[]) {
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
     // using namespace Engine;
 
     try{
-        std::cout << "[Producer] Launching producer... \n";
+        LOG_INFO("Launching producer...");
 
         // Initialize the queue
         Exchange::Ipc::Producer producer("queue"); // name: "queue"
@@ -40,15 +41,14 @@ int main(int argc, char* argv[]) {
 
         bool success = producer.write(buf.data(), static_cast<uint32_t>(buf.size()));
         if (success) {
-            std::cout << "[Producer] Sent: " << "\n";
+            LOG_INFO("Message sent...");
             printMessage(newOrder);
         }
         else {
-            std::cout << "[Producer] Queue Full! Waiting...\n";
+            LOG_WARN("IPC Queue Full! Waiting...");
         }
     } 
     catch (Engine::EngException& ex) {
-        std::cerr << "Critical Error" << std::endl;
         ex.log();
         return 1;
     }

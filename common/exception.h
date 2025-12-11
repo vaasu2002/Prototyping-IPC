@@ -7,6 +7,7 @@
 #include <cerrno>
 #include <cstring>
 #include <vector>
+#include "Logger/Logger.h"
 
 namespace Engine {
 
@@ -63,14 +64,16 @@ namespace Engine {
                 context = vformat(contextFormat, args);
                 va_end(args);
             }
-
-            std::fprintf(stderr, "[ERROR] %s(%d) in %s: ", mFile.c_str(), mLine, mFunction.c_str());
-
-            if (!context.empty()) {
-                std::fprintf(stderr, "%s: ", context.c_str());
-            }
-
-            std::fprintf(stderr, "%s\n", what());
+            
+            LOG_ERROR("%s(%d) in %s: %s%s%s",
+                mFile.c_str(),
+                mLine,
+                mFunction.c_str(),
+                context.empty() ? "" : context.c_str(),
+                context.empty() ? "" : ": ",
+                what()
+            );
+            
         }
 
         [[noreturn]]

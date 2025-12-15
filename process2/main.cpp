@@ -6,7 +6,7 @@
 #include <chrono>
 #include "messaging.h"
 #include "enum.h"
-#include "exception.h"
+#include "Exception.h"
 #include "ipc/SharedMemory.h"
 
 int main(int argc, char* argv[]) {

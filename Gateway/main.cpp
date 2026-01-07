@@ -7,7 +7,6 @@ int main() {
     }
     catch (Engine::EngException& ex) {
         LOG_ERROR("Exception caught:");
-        ex.log();
         return 1;
     }
     return 0;

@@ -29,8 +29,11 @@ namespace Exchange::Gateway {
         std::atomic<bool> mShutdownRequested{false};
 
         std::unique_ptr<GatewayScheduler> mScheduler;
+        // Thread-safe blocking queue for passing packets between producer and consumer threads
         std::shared_ptr<Core::IBlockingQueue<Network::RawPacket>> mIngressQueue;
+        // TCP listener using epoll to accept connections and enqueue raw packets
         std::unique_ptr<Network::TcpEpollListener> mListener;
+        // Dispatches and routes decoded FIX messages to Scheduler process
         std::unique_ptr<FixMessageDispatcher> mDispatcher;
     };
 }

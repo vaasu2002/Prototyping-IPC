@@ -44,7 +44,6 @@ namespace Exchange::Gateway {
         Core::XMLReader reader("../config.xml");
         Config::init(reader.getNode(mName));
 
-        // Create components
         mScheduler = std::make_unique<GatewayScheduler>(mName);
 
         mIngressQueue =

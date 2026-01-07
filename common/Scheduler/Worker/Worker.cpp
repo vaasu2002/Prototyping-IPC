@@ -9,6 +9,8 @@ Worker::Worker(const std::string& id):mId(std::move(id)), mStop(false){}
 void Worker::start()
 {
     std::lock_guard<std::mutex> lk(mThreadMutex);
+    // Safety guard to ensure multiple threads for a single worker instance
+    // are not spawned
     if(mThread.joinable())
     {
         return;
